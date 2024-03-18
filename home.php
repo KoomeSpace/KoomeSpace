@@ -1,0 +1,225 @@
+<?php
+session_start();
+
+include("connection.php");
+include("functions.php");
+
+$user_data = check_login($con);
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Access Page</title>
+    <style>
+        body {
+            background-image: url("logo4.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            display: block;
+            margin: 20px auto;
+            width: 100px;
+        }
+
+        .welcome {
+            font-size: 24px;
+            margin-bottom: 20px;
+            animation: fade 1s ease-in-out;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #e50914;
+            color: #ffffff;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #b4070d;
+        }
+
+        .logout-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: #c4c4c4;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .logout-btn:hover {
+            background-color: #e50914;
+        }
+
+        .menu-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 10px;
+        }
+
+        .menu-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background-color: #e50914;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .menu-icon:hover {
+            background-color: #b4070d;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-image: url("logo4.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 1;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #000000;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="menu-bar">
+        <div class="menu-icon" onclick="toggleDropdownMenu()">&#9776;</div>
+        <div class="dropdown-menu" id="dropdown-menu">
+            <a href="home.php" class="dropdown-item">
+                <img src="home.png" alt="Home" width="20" height="20">
+            </a>
+            <a href="search.php" class="dropdown-item">
+                <img src="search1.png" alt="Search" width="20" height="20">
+            </a>
+            <a href="passwords.php" class="dropdown-item">
+                <img src="plus.png" alt="Add" width="20" height="20">
+            </a>
+            <a href="edit.php" class="dropdown-item">
+                <img src="edit.png" alt="Edit" width="20" height="20">
+            </a>
+            <a href="delete.php" class="dropdown-item">
+                <img src="remove.png" alt="Forget" width="20" height="20">
+            </a>
+            <a href="logout.php" class="dropdown-item">
+                <img src="power.png" alt="Logout" width="20" height="20">
+            </a>
+        </div>
+    </div>
+
+    <img src="shield.png" alt="Logo" class="logo">
+    <?php
+    if (isset($user_data['user_name']) && !empty($user_data['user_name'])) {
+        echo '<div class="welcome" id="welcome-msg">';
+        echo 'Welcome, ' . htmlspecialchars($user_data['user_name']) . '!';
+        echo '</div>';
+    } else {
+        echo '<div class="welcome" id="welcome-msg">';
+        echo 'Welcome!';
+        echo '</div>';
+    }
+    ?>
+    <div class="btn-container">
+        <div class="btn-row">
+            <a href="passwords.php" class="btn">Add Account</a>
+            <a href="search.php" class="btn">Search</a>
+            <a href="edit.php" class="btn">Edit Password</a>
+            <a href="delete.php" class="btn">Forget Password</a>
+        </div>
+        <a href="logout.php" class="logout-btn">Logout</a>
+    </div>
+</div>
+
+<script>
+    function toggleDropdownMenu() {
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        dropdownMenu.classList.toggle('show');
+    }
+</script>
+
+<script>
+    const welcomeMsg = document.getElementById('welcome-msg');
+    welcomeMsg.style.opacity = '0';
+    welcomeMsg.style.transform = 'translateY(-20px)';
+    welcomeMsg.style.animation = 'fade 1s ease-in-out forwards';
+</script>
+</body>
+</html>
